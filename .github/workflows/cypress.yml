@@ -24,9 +24,6 @@ jobs:
       # If your app needs to run locally
       - name: Start app
         run: npm start &
-        
-      - name: Wait for app
-        run: npx wait-on http://localhost:3000
 
       - name: Run Cypress tests
         run: npx cypress run
