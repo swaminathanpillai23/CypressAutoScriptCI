@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/swaminathanpillai23/CypressAutoScriptCI.git'
+            }
+        }
+        
+        stage('Run Cypress') {
+            steps {
+                bat '''
+                docker run --rm ^
+                -v %cd%:/e2e ^
+                -w /e2e ^
+                cypress/included:13.7.0 ^
+                npx cypress run
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'cypress/videos/**/*', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'cypress/screenshots/**/*', allowEmptyArchive: true
+        }
+    }
+}
+
